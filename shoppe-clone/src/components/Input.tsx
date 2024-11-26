@@ -7,7 +7,7 @@ interface Props {
   placeholder?: string
   register: UseFormRegister<any>
   errorMessage?: string
-  className: string
+  className?: string
   rules?: RegisterOptions
 }
 

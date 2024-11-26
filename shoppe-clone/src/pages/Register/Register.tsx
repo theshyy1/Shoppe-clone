@@ -1,24 +1,55 @@
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { registerAccount } from 'src/api/auth.api'
 import Input from 'src/components/Input'
-import { getRules } from 'src/utils/validate'
+import { Schema, schema } from 'src/utils/validate'
+import { omit } from 'lodash'
+import { isAxios422Error } from 'src/utils/422'
+import { ResponseAPI } from 'src/types/ultil.type'
+import { toast } from 'react-toastify'
 
-export interface FormData {
-  email?: string
-  password?: string
-  confirm_password?: string
-}
+type FormData = Schema
+
 const Register = () => {
   const {
     register,
     handleSubmit,
-    getValues,
+    setError,
     formState: { errors }
-  } = useForm<FormData>()
-  const rules = getRules(getValues)
+  } = useForm<FormData>({
+    resolver: yupResolver(schema)
+  })
+
+  const registerMutation = useMutation({
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+  })
 
   const onHandleSubmit = handleSubmit((data) => {
-    console.log(data)
+    const body = omit(data, 'confirm_password')
+    registerMutation.mutate(body, {
+      onSuccess: () => toast.success('Register Successfully'),
+      onError: (error) => {
+        if (isAxios422Error<ResponseAPI<Omit<FormData, 'confirm_password'>>>(error)) {
+          const formError = error.response?.data.data
+
+          if (formError?.email) {
+            setError('email', {
+              message: formError.email,
+              type: 'Server'
+            })
+          }
+
+          if (formError?.password) {
+            setError('password', {
+              message: formError.password,
+              type: 'Server'
+            })
+          }
+        }
+      }
+    })
   })
 
   return (
@@ -35,12 +66,10 @@ const Register = () => {
                 className='mt-8'
                 errorMessage={errors && errors.email?.message}
                 placeholder='Email'
-                rules={rules.email}
               />
               <Input
                 type='password'
                 name='password'
-                rules={rules.password}
                 className='mt-3'
                 placeholder='Password'
                 errorMessage={errors && errors.password?.message}
@@ -49,7 +78,6 @@ const Register = () => {
               <Input
                 type='password'
                 name='confirm_password'
-                rules={rules.confirm_password}
                 className='mt-3'
                 placeholder='confirm_password'
                 errorMessage={errors && errors.confirm_password?.message}
