@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios'
 import { HttpStatusCode } from 'src/constraint/HttpStatusCode'
 
 export function isAxiosError<T>(err: unknown): err is AxiosError<T> {
+  //type predicate
   return axios.isAxiosError(err)
 }
 
