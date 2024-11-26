@@ -1,16 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
+import { omit } from 'lodash'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { registerAccount } from 'src/api/auth.api'
 import Input from 'src/components/Input'
-import { Schema, schema } from 'src/utils/validate'
-import { omit } from 'lodash'
-import { isAxios422Error } from 'src/utils/422'
 import { ResponseAPI } from 'src/types/ultil.type'
-import { toast } from 'react-toastify'
+import { isAxios422Error } from 'src/utils/422'
+import { formSchema, formSchemaType } from 'src/utils/validate'
 
-type FormData = Schema
+type FormData = formSchemaType
 
 const Register = () => {
   const {
@@ -19,7 +19,7 @@ const Register = () => {
     setError,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(formSchema)
   })
 
   const registerMutation = useMutation({

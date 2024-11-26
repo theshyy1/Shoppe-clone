@@ -7,9 +7,9 @@ import { LoginAccount } from 'src/api/auth.api'
 import Input from 'src/components/Input'
 import { ResponseAPI } from 'src/types/ultil.type'
 import { isAxios422Error } from 'src/utils/422'
-import { LoginSchema, loginSchema } from 'src/utils/validate'
+import { LoginSchemaType, loginSchema } from 'src/utils/validate'
 
-type FormData = LoginSchema
+type FormData = LoginSchemaType
 const Login = () => {
   const {
     register,

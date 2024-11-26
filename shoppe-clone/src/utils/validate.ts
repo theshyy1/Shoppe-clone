@@ -58,7 +58,7 @@ export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
 })
 
 // schema register <full>
-export const schema = yup
+export const formSchema = yup
   .object({
     email: yup
       .string()
@@ -80,8 +80,8 @@ export const schema = yup
   })
   .required()
 
-export type Schema = yup.InferType<typeof schema>
+export type formSchemaType = yup.InferType<typeof formSchema>
 
 // schema login
-export const loginSchema = schema.omit(['confirm_password'])
-export type LoginSchema = yup.InferType<typeof loginSchema>
+export const loginSchema = formSchema.omit(['confirm_password'])
+export type LoginSchemaType = yup.InferType<typeof loginSchema>
