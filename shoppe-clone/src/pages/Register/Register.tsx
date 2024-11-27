@@ -1,18 +1,22 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { omit } from 'lodash'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { registerAccount } from 'src/api/auth.api'
 import Input from 'src/components/Input'
-import { ResponseAPI } from 'src/types/ultil.type'
+import { AppContext } from 'src/contexts/app.context'
+import { ErrorResponse } from 'src/types/ultil.type'
 import { isAxios422Error } from 'src/utils/422'
 import { formSchema, formSchemaType } from 'src/utils/validate'
 
 type FormData = formSchemaType
 
 const Register = () => {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -29,9 +33,13 @@ const Register = () => {
   const onHandleSubmit = handleSubmit((data) => {
     const body = omit(data, 'confirm_password')
     registerMutation.mutate(body, {
-      onSuccess: () => toast.success('Register Successfully'),
+      onSuccess: () => {
+        toast.success('Register Successfully')
+        setIsAuthenticated(true)
+        navigate('/')
+      },
       onError: (error) => {
-        if (isAxios422Error<ResponseAPI<Omit<FormData, 'confirm_password'>>>(error)) {
+        if (isAxios422Error<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
           const formError = error.response?.data.data
 
           if (formError?.email) {

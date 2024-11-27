@@ -24,6 +24,7 @@ const Popover = ({ children, renderProp, className, as: Element = 'div', initial
   return (
     <Element className={className} onMouseLeave={hidePopover} onMouseEnter={openPopover} ref={reference}>
       {children}
+      {/* Popover */}
       <FloatingPortal>
         <AnimatePresence>
           {open && (

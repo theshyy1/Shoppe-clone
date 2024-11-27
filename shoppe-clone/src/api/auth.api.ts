@@ -5,3 +5,5 @@ import { LoginSchemaType } from 'src/utils/validate'
 export const registerAccount = (body: LoginSchemaType) => http.post<AuthResponse>('register', body)
 
 export const LoginAccount = (body: LoginSchemaType) => http.post<AuthResponse>('login', body)
+
+export const LogoutAccount = () => http.post('logout')

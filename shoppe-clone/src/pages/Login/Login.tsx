@@ -1,21 +1,24 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { LoginAccount } from 'src/api/auth.api'
 import Input from 'src/components/Input'
-import { ResponseAPI } from 'src/types/ultil.type'
+import { AppContext } from 'src/contexts/app.context'
+import { ErrorResponse } from 'src/types/ultil.type'
 import { isAxios422Error } from 'src/utils/422'
 import { LoginSchemaType, loginSchema } from 'src/utils/validate'
 
 type FormData = LoginSchemaType
 const Login = () => {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
     setError,
-    watch,
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(loginSchema)
@@ -29,10 +32,12 @@ const Login = () => {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         toast.success(data.data.message)
+        setIsAuthenticated(true)
+        navigate('/')
       },
       onError: (error) => {
         console.log(error)
-        if (isAxios422Error<ResponseAPI<FormData>>(error)) {
+        if (isAxios422Error<ErrorResponse<FormData>>(error)) {
           const formError = error.response?.data.data
 
           if (formError?.email) {
@@ -53,8 +58,6 @@ const Login = () => {
     })
   })
 
-  const value = watch()
-  console.log(value)
   return (
     <div className='bg-orange'>
       <div className='container'>
