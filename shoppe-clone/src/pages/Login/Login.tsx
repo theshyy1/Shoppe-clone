@@ -5,7 +5,9 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { LoginAccount } from 'src/api/auth.api'
+import Button from 'src/components/Button'
 import Input from 'src/components/Input'
+import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import { ErrorResponse } from 'src/types/ultil.type'
 import { isAxios422Error } from 'src/utils/422'
@@ -82,14 +84,19 @@ const Login = () => {
                 register={register}
               />
               <div className='mt-3'>
-                <button className='w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600'>
+                <Button
+                  type='submit'
+                  disabled={loginMutation.isPending}
+                  isLoading={loginMutation.isPending}
+                  className='w-full flex items-center justify-center text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600'
+                >
                   Đăng nhập
-                </button>
+                </Button>
               </div>
               <div className='mt-8 text-center'>
                 <div className='flex items-center'>
                   <span className='text-gray-400'>Bạn có tài khoản chưa? </span>
-                  <Link to='/register' className='text-red-400'>
+                  <Link to={path.register} className='text-red-400'>
                     Đăng Ký
                   </Link>
                 </div>

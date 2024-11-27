@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import MainLayout from 'src/layout/MainLayout'
 import RegisterLayout from 'src/layout/RegisterLayout'
@@ -20,7 +21,7 @@ const RejectedRoutes = () => {
 const useRoutesElement = () => {
   const routes = useRoutes([
     {
-      path: '/',
+      path: '',
       index: true,
       element: (
         <MainLayout>
@@ -33,7 +34,7 @@ const useRoutesElement = () => {
       element: <ProtectedRoutes />,
       children: [
         {
-          path: 'profile',
+          path: path.profile,
           element: (
             <MainLayout>
               <Profile />
@@ -41,7 +42,7 @@ const useRoutesElement = () => {
           )
         },
         {
-          path: 'cart',
+          path: path.cart,
           element: <MainLayout>{/* <Cart /> */}</MainLayout>
         }
       ]
@@ -51,7 +52,7 @@ const useRoutesElement = () => {
       element: <RejectedRoutes />,
       children: [
         {
-          path: 'login',
+          path: path.login,
           element: (
             <RegisterLayout>
               <Login />
@@ -59,7 +60,7 @@ const useRoutesElement = () => {
           )
         },
         {
-          path: 'register',
+          path: path.register,
           element: (
             <RegisterLayout>
               <Register />

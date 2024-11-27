@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios'
-import { HttpStatusCode } from 'src/constraint/HttpStatusCode'
+import { HttpStatusCode } from 'src/constants/HttpStatusCode'
 
 export function isAxiosError<T>(err: unknown): err is AxiosError<T> {
   //type predicate

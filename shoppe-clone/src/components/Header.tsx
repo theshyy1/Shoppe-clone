@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { LogoutAccount } from 'src/api/auth.api'
 import Popover from 'src/components/Popover'
+import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 
 const Header = () => {
@@ -29,7 +30,7 @@ const Header = () => {
                 </div>
               </div>
             }
-            className={'flex items-center py-1 hover:text-gray-300 cursor-pointer'}
+            className={'flex items-center py-1 hover:text-white/70 cursor-pointer'}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -60,14 +61,14 @@ const Header = () => {
           {isAuthenticated && (
             <Popover
               as='section'
-              className={'flex items-center py-1 hover:text-gray-300 cursor-pointer ml-4'}
+              className={'flex items-center py-1 hover:text-white/70 cursor-pointer ml-4'}
               renderProp={
                 <div className='bg-white text-black relative shadow-sm rounded-sm border border-gray-200'>
                   <div className='flex flex-col'>
-                    <Link to='/' className='py-4 px-5 hover:text-orange hover:bg-gray-'>
+                    <Link to={path.profile} className='py-4 px-5 hover:text-orange hover:bg-gray-'>
                       Tài khoản của tôi
                     </Link>
-                    <Link to='/' className='py-4 px-5 hover:text-orange hover:bg-gray-100'>
+                    <Link to={path.cart} className='py-4 px-5 hover:text-orange hover:bg-gray-100'>
                       Đơn mua
                     </Link>
                     <button onClick={handleLogout} className='py-4 px-5 hover:text-orange hover:bg-gray-100 text-left'>
@@ -77,7 +78,7 @@ const Header = () => {
                 </div>
               }
             >
-              <div className='flex items-center py-1 hover:text-gray-300 cursor-pointer ml-4'>
+              <div className='flex items-center py-1 hover:text-white/70 cursor-pointer ml-4'>
                 <div className='w-5 h-5 mr-2 flex-shrink-0'>
                   <img
                     src='https://picsum.photos/24/24'
@@ -93,11 +94,11 @@ const Header = () => {
           )}
           {!isAuthenticated && (
             <div className='flex items-center'>
-              <Link to='/register' className='mx-3 capitalize hover:text-gray-300 cursor-pointer'>
+              <Link to={path.register} className='mx-3 capitalize hover:text-white/70 cursor-pointer'>
                 Đăng ký
               </Link>
               <div className='border-r-[1px] border-r-white/40  h-4' />
-              <Link to='/login' className='mx-3 capitalize hover:text-gray-300 cursor-pointer'>
+              <Link to={path.login} className='mx-3 capitalize hover:text-white/70 cursor-pointer'>
                 Đăng nhập
               </Link>
             </div>
@@ -167,7 +168,7 @@ const Header = () => {
                 </div>
               }
             >
-              <Link to='/cart' className='pb-2'>
+              <Link to={path.cart} className='pb-2'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
