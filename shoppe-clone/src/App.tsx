@@ -8,7 +8,11 @@ function App() {
   return (
     <>
       {routes}
-    <ToastContainer />
+    <ToastContainer position="top-center"
+      autoClose={1500}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick />
     </>
   )
 }

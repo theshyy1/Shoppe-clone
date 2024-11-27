@@ -17,7 +17,7 @@ import { formSchema, formSchemaType } from 'src/utils/validate'
 type FormData = formSchemaType
 
 const Register = () => {
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   const {
     register,
@@ -35,9 +35,12 @@ const Register = () => {
   const onHandleSubmit = handleSubmit((data) => {
     const body = omit(data, 'confirm_password')
     registerMutation.mutate(body, {
-      onSuccess: () => {
-        toast.success('Register Successfully')
+      onSuccess: ({ data }) => {
+        toast.success('Register Successfully', {
+          delay: 1000
+        })
         setIsAuthenticated(true)
+        setProfile(data.data.user)
         navigate('/')
       },
       onError: (error) => {

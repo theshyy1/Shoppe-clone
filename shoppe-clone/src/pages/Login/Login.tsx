@@ -15,7 +15,7 @@ import { LoginSchemaType, loginSchema } from 'src/utils/validate'
 
 type FormData = LoginSchemaType
 const Login = () => {
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   const {
     register,
@@ -32,13 +32,13 @@ const Login = () => {
 
   const onHandleSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
-      onSuccess: (data) => {
-        toast.success(data.data.message)
+      onSuccess: ({ data }) => {
+        toast.success(data.message)
         setIsAuthenticated(true)
+        setProfile(data.data.user)
         navigate('/')
       },
       onError: (error) => {
-        console.log(error)
         if (isAxios422Error<ErrorResponse<FormData>>(error)) {
           const formError = error.response?.data.data
 

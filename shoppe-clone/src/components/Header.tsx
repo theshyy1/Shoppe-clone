@@ -7,11 +7,12 @@ import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 
 const Header = () => {
-  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext)
+  const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
   const LogoutMutation = useMutation({
     mutationFn: () => LogoutAccount(),
     onSuccess: () => {
       setIsAuthenticated(false)
+      setProfile(null)
     }
   })
 
@@ -87,7 +88,7 @@ const Header = () => {
                   />
                 </div>
                 <div className=''>
-                  <span>Hoàng Trung</span>
+                  <span>{profile?.email}</span>
                 </div>
               </div>
             </Popover>
