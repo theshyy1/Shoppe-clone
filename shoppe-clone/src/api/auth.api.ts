@@ -2,8 +2,10 @@ import { AuthResponse } from 'src/types/auth.type'
 import http from 'src/utils/http'
 import { LoginSchemaType } from 'src/utils/validate'
 
-export const registerAccount = (body: LoginSchemaType) => http.post<AuthResponse>('register', body)
+const AuthAPI = {
+  registerAccount: (body: LoginSchemaType) => http.post<AuthResponse>('register', body),
+  LoginAccount: (body: LoginSchemaType) => http.post<AuthResponse>('login', body),
+  LogoutAccount: () => http.post('logout')
+}
 
-export const LoginAccount = (body: LoginSchemaType) => http.post<AuthResponse>('login', body)
-
-export const LogoutAccount = () => http.post('logout')
+export default AuthAPI

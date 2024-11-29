@@ -4,13 +4,13 @@ import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { LoginAccount } from 'src/api/auth.api'
+import AuthAPI from 'src/api/auth.api'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
 import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import { ErrorResponse } from 'src/types/ultil.type'
-import { isAxios422Error } from 'src/utils/422'
+import { isAxios422Error } from 'src/utils/ultils'
 import { LoginSchemaType, loginSchema } from 'src/utils/validate'
 
 type FormData = LoginSchemaType
@@ -27,7 +27,7 @@ const Login = () => {
   })
 
   const loginMutation = useMutation({
-    mutationFn: (body: FormData) => LoginAccount(body)
+    mutationFn: (body: FormData) => AuthAPI.LoginAccount(body)
   })
 
   const onHandleSubmit = handleSubmit((data) => {

@@ -5,13 +5,13 @@ import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { registerAccount } from 'src/api/auth.api'
+import AuthAPI from 'src/api/auth.api'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
 import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import { ErrorResponse } from 'src/types/ultil.type'
-import { isAxios422Error } from 'src/utils/422'
+import { isAxios422Error } from 'src/utils/ultils'
 import { formSchema, formSchemaType } from 'src/utils/validate'
 
 type FormData = formSchemaType
@@ -29,7 +29,7 @@ const Register = () => {
   })
 
   const registerMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => AuthAPI.registerAccount(body)
   })
 
   const onHandleSubmit = handleSubmit((data) => {
