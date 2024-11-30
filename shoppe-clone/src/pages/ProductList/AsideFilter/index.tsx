@@ -1,19 +1,66 @@
-import { Link } from 'react-router-dom'
+import { yupResolver } from '@hookform/resolvers/yup'
+import classNames from 'classnames'
+import { debounce } from 'lodash'
+import { Controller, useForm } from 'react-hook-form'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
-import Input from 'src/components/Input'
+import InputNumber from 'src/components/InputNumber'
 import path from 'src/constants/path'
+import { QueryConfig } from 'src/pages/ProductList/ProductList'
+import { ICategory } from 'src/types/category.type'
+import { NoUndefinedField } from 'src/types/ultil.type'
+import { formSchema, formSchemaType } from 'src/utils/validate'
 
-const AsideFilter = () => {
+interface Props {
+  categories: ICategory[]
+  queryConfig: QueryConfig
+}
+
+type FormData = NoUndefinedField<Pick<formSchemaType, 'price_max' | 'price_min'>>
+const priceSchema = formSchema.pick(['price_max', 'price_min'])
+
+const AsideFilter = ({ categories, queryConfig }: Props) => {
+  const { category } = queryConfig
+  const navigate = useNavigate()
+  const {
+    control,
+    handleSubmit,
+    trigger,
+    formState: { errors }
+  } = useForm<FormData>({
+    defaultValues: {
+      price_min: '',
+      price_max: ''
+    },
+    resolver: yupResolver(priceSchema)
+  })
+
+  const onHandleSubmit = handleSubmit((data) => {
+    navigate({
+      pathname: path.home,
+      search: createSearchParams({
+        ...queryConfig,
+        price_min: data.price_min,
+        price_max: data.price_max
+      }).toString()
+    })
+  })
+
   return (
     <div className='py-4'>
-      <Link to={path.home} className='flex items-center font-bold'>
+      <Link
+        to={path.home}
+        className={classNames('flex items-center font-bold', {
+          'text-orange ': !category
+        })}
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
           strokeWidth={1.5}
           stroke='currentColor'
-          className='size-6'
+          className='size-6 fill-orange'
         >
           <path
             strokeLinecap='round'
@@ -25,19 +72,35 @@ const AsideFilter = () => {
       </Link>
       <div className='bg-gray-300 h-[1px] my-4' />
       <ul>
-        <li className='py-2 pl-2'>
-          <Link to={path.home} className='relative px-2 text-orange font-semibold'>
-            <svg viewBox='0 0 4 7' className='fill-orange h-2 w-2 absolute top-2 left-[-10px]'>
-              <polygon points='4 3.5 0 0 0 7' />
-            </svg>
-            Thời trang nam
-          </Link>
-        </li>
-        <li className='py-2 pl-2'>
-          <Link to={path.home} className='relative px-2'>
-            Thời trang nữ
-          </Link>
-        </li>
+        {categories?.map((categoryItem) => {
+          const isActiveCategory = categoryItem._id === category
+          return (
+            <li className='py-2 pl-2' key={categoryItem._id}>
+              <Link
+                to={{
+                  pathname: path.home,
+                  search: createSearchParams({
+                    ...queryConfig,
+                    category: categoryItem._id
+                  }).toString()
+                }}
+                className={classNames('relative px-2 ', {
+                  'text-orange font-semibold': isActiveCategory
+                })}
+              >
+                <svg
+                  viewBox='0 0 4 7'
+                  className={classNames(' h-2 w-2 absolute top-2 left-[-10px]', {
+                    'fill-orange': isActiveCategory
+                  })}
+                >
+                  <polygon points='4 3.5 0 0 0 7' />
+                </svg>
+                {categoryItem.name}
+              </Link>
+            </li>
+          )
+        })}
       </ul>
       <Link to={path.home} className='flex items-center font-bold'>
         <svg
@@ -60,23 +123,51 @@ const AsideFilter = () => {
       <div className='bg-gray-300 h-[1px] my-4' />
       <div className='my-5'>
         <div className=''>Khoảng giá</div>
-        <form className='mt-2'>
+        <form className='mt-2' onSubmit={onHandleSubmit}>
           <div className='flex items-start'>
-            <Input
-              type='text'
-              className='grow'
-              name='from'
-              classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
-              placeholder='đ TỪ'
+            <Controller
+              control={control}
+              name='price_min'
+              defaultValue=''
+              render={({ field }) => (
+                <InputNumber
+                  type='text'
+                  className='grow'
+                  classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+                  placeholder='đ TỪ'
+                  classNameError='hidden'
+                  {...field}
+                  onChange={(event) => {
+                    field.onChange(event)
+                    trigger('price_max')
+                  }}
+                />
+              )}
             />
             <div className='mx-2 mt-2 shrink-0'>-</div>
-            <Input
-              type='text'
-              className='grow'
-              name='from'
-              classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
-              placeholder='đ ĐẾN'
+            <Controller
+              control={control}
+              name='price_max'
+              render={({ field }) => {
+                return (
+                  <InputNumber
+                    type='text'
+                    className='grow'
+                    classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+                    placeholder='đ ĐẾN'
+                    classNameError='hidden'
+                    {...field}
+                    onChange={(event) => {
+                      field.onChange(event)
+                      trigger('price_min')
+                    }}
+                  />
+                )
+              }}
             />
+          </div>
+          <div className='mt-1 text-red-600 min-h-[1rem] text-sm font-semibold text-center'>
+            {errors.price_max?.message}
           </div>
           <Button className='bg-orange w-full text-white uppercase hover:bg-orange/80 px-3 py-2 flex justify-center items-center'>
             ÁP DỤNG

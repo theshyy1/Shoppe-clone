@@ -14,7 +14,8 @@ import { ErrorResponse } from 'src/types/ultil.type'
 import { isAxios422Error } from 'src/utils/ultils'
 import { formSchema, formSchemaType } from 'src/utils/validate'
 
-type FormData = formSchemaType
+const registerSchema = formSchema.pick(['email', 'password', 'confirm_password'])
+type FormData = Pick<formSchemaType, 'email' | 'confirm_password' | 'password'>
 
 const Register = () => {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
@@ -25,7 +26,7 @@ const Register = () => {
     setError,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: yupResolver(formSchema)
+    resolver: yupResolver(registerSchema)
   })
 
   const registerMutation = useMutation({

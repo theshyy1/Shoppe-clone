@@ -29,11 +29,12 @@ export interface IProductList {
 export interface IProductListConfig {
   page?: number | string
   limit?: number | string
-  sort_by?: 'createAt' | 'view' | 'sold' | 'price'
+  sort_by?: 'createdAt' | 'view' | 'sold' | 'price'
   order?: 'asc' | 'desc'
   exclude?: string
   rating_filter?: number | string
   price_max?: number | string
   price_min?: number | string
   name?: string
+  category?: string
 }

@@ -11,9 +11,10 @@ import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import { ErrorResponse } from 'src/types/ultil.type'
 import { isAxios422Error } from 'src/utils/ultils'
-import { LoginSchemaType, loginSchema } from 'src/utils/validate'
+import { formSchema, formSchemaType } from 'src/utils/validate'
 
-type FormData = LoginSchemaType
+const loginSchema = formSchema.pick(['email', 'password'])
+type FormData = Pick<formSchemaType, 'email' | 'password'>
 const Login = () => {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
