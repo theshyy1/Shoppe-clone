@@ -94,7 +94,8 @@ export const formSchema = yup
       name: 'price-not-allowed',
       message: 'Giá không phù hợp',
       test: testPriceMinMax
-    })
+    }),
+    name: yup.string().trim()
   })
   .required()
 

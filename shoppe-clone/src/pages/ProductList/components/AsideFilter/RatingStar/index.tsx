@@ -1,4 +1,3 @@
-import { omit } from 'lodash'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import path from 'src/constants/path'
 import { QueryConfig } from 'src/pages/ProductList/ProductList'

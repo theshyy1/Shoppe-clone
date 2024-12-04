@@ -4,7 +4,9 @@ import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import MainLayout from 'src/layout/MainLayout'
 import RegisterLayout from 'src/layout/RegisterLayout'
+import Cart from 'src/pages/Cart'
 import Login from 'src/pages/Login/Login'
+import ProductDetail from 'src/pages/ProductDetail'
 import ProductList from 'src/pages/ProductList/ProductList'
 import Profile from 'src/pages/Profile'
 import Register from 'src/pages/Register/Register'
@@ -29,6 +31,7 @@ const useRoutesElement = () => {
         </MainLayout>
       )
     },
+
     {
       path: '',
       element: <ProtectedRoutes />,
@@ -43,7 +46,19 @@ const useRoutesElement = () => {
         },
         {
           path: path.cart,
-          element: <MainLayout>{/* <Cart /> */}</MainLayout>
+          element: (
+            <MainLayout>
+              <Cart />
+            </MainLayout>
+          )
+        },
+        {
+          path: path.productDetail,
+          element: (
+            <MainLayout>
+              <ProductDetail />
+            </MainLayout>
+          )
         }
       ]
     },

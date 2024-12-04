@@ -1,22 +1,72 @@
-import { useMutation } from '@tanstack/react-query'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { omit } from 'lodash'
 import { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import AuthAPI from 'src/api/auth.api'
+import PurchaseAPI from 'src/api/purchase.api'
 import Popover from 'src/components/Popover'
 import path from 'src/constants/path'
+import { PurchaseStatus } from 'src/constants/purchase'
 import { AppContext } from 'src/contexts/app.context'
+import useQueryConfig from 'src/hooks/useQueryConfig'
+import { queryClient } from 'src/main'
+import { formatCurrency } from 'src/utils/ultils'
+import { formSchema, formSchemaType } from 'src/utils/validate'
 
+type FormData = Pick<formSchemaType, 'name'>
+const searchSchema = formSchema.pick(['name'])
+
+const MAX_PRODUCTS_OUTCART = 5
 const Header = () => {
+  const queryConfig = useQueryConfig()
+  const navigate = useNavigate()
+  const { register, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      name: ''
+    },
+    resolver: yupResolver(searchSchema)
+  })
+
   const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
   const LogoutMutation = useMutation({
     mutationFn: () => AuthAPI.LogoutAccount(),
     onSuccess: () => {
       setIsAuthenticated(false)
       setProfile(null)
+      queryClient.removeQueries({ queryKey: ['get-purchases', { status: PurchaseStatus.inCart }] })
     }
   })
 
+  const { data: purchasesInCartData } = useQuery({
+    queryKey: ['get-purchases', { status: PurchaseStatus.inCart }],
+    queryFn: () => PurchaseAPI.getPurchases({ status: PurchaseStatus.inCart }),
+    enabled: isAuthenticated
+  })
+
+  const purchasesInCart = purchasesInCartData?.data.data
+
   const handleLogout = () => LogoutMutation.mutate()
+
+  const onHandleSearch = handleSubmit((data) => {
+    const config = queryConfig.order
+      ? omit(
+          {
+            ...queryConfig,
+            name: data.name as string
+          },
+          ['order', 'sort_by']
+        )
+      : {
+          ...queryConfig,
+          name: data.name as string
+        }
+    navigate({
+      pathname: path.home,
+      search: createSearchParams(config).toString()
+    })
+  })
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
       <div className='container'>
@@ -113,13 +163,13 @@ const Header = () => {
               </g>
             </svg>
           </Link>
-          <form className='col-span-9'>
+          <form className='col-span-9' onSubmit={onHandleSearch}>
             <div className='bg-white rounded-sm p-1 flex'>
               <input
                 type='text'
-                name='search'
                 className='text-black px-3 py-2 flex-grow border-none outline-none bg-transparent'
                 placeholder='Free ship từ 0Đ'
+                {...register('name')}
               />
               <button className='rounded-sm py-2 px-6 bg-orange flex-shrink-0 hover:opacity-90'>
                 <svg
@@ -144,32 +194,59 @@ const Header = () => {
               placement='bottom-start'
               renderProp={
                 <div className='bg-white text-black mr-2 relative shadow-sm rounded-sm border border-gray-200 max-w-[400px]'>
-                  <div className='p-2'>
-                    <div className='text-gray-600 capitalize'>Sản phẩm mới thêm</div>
-                    <div className='mt-5'>
-                      <div className='mt-4 flex items-center'>
-                        <div className='flex-shrink-0'>
-                          <img src='https://picsum.photos/36/36' className='w-10 h-10 object-cover' alt='cart-image' />
+                  {purchasesInCart ? (
+                    <div className='p-2'>
+                      <div className='text-gray-600 capitalize'>Sản phẩm mới thêm</div>
+                      {purchasesInCart.slice(0, MAX_PRODUCTS_OUTCART).map((purchase) => (
+                        <div className='mt-5' key={purchase._id}>
+                          <div className='mt-2 py-2 flex items-center hover:bg-gray-100'>
+                            <div className='flex-shrink-0'>
+                              <img
+                                src={purchase.product.image}
+                                className='w-10 h-10 object-cover'
+                                alt={purchase.product.name}
+                              />
+                            </div>
+                            <div className='flex-grow ml-2 overflow-hidden'>
+                              <div className='truncate'>{purchase.product.name}</div>
+                            </div>
+                            <div className='ml-2 flex-shrink-0'>
+                              <span className='text-orange'>đ{formatCurrency(purchase.price)}</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className='flex-grow ml-2 overflow-hidden'>
-                          <div className='truncate'>Bộ nồi INOX 3 Đáy SUNHOUSE SH334 16, 20, 24 cm</div>
+                      ))}
+                      <div className='flex mt-6 items-center justify-between'>
+                        <div className='capitalize text-xs text-gray-500'>
+                          {purchasesInCart.length > MAX_PRODUCTS_OUTCART
+                            ? purchasesInCart.length - MAX_PRODUCTS_OUTCART
+                            : ' '}{' '}
+                          Thêm hàng vào giỏ
                         </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <span className='text-orange'>300.000</span>
-                        </div>
+                        <Link
+                          to={path.cart}
+                          className='capitalize py-3 bg-orange hover:bg-opacity-80 px-4 rounded-sm text-white'
+                        >
+                          Xem giỏ hàng
+                        </Link>
                       </div>
                     </div>
-                    <div className='flex mt-6 items-center justify-between'>
-                      <div className='capitalize text-xs text-gray-500'>Thêm hàng vào giỏ</div>
-                      <button className='capitalize py-3 bg-orange hover:bg-opacity-80 px-4 rounded-sm text-white'>
-                        Xem giỏ hàng
-                      </button>
+                  ) : (
+                    <div className='relative max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
+                      <div className='flex h-[300px] w-[300px] flex-col items-center justify-center p-2'>
+                        <img
+                          src='https://picsum.photos/200/100'
+                          className='rounded-full object-cover h-24 w-24'
+                          alt='No product'
+                        />
+                        <div className='mt-3'>Chưa có sản phẩm</div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               }
             >
-              <Link to={path.cart} className='pb-2'>
+              <Link to={path.cart} className='pb-2 block relative'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
@@ -184,6 +261,11 @@ const Header = () => {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
                   />
                 </svg>
+                {purchasesInCart && (
+                  <span className='absolute top-0 left-5 bg-white border rounded-full px-3 fill-orange text-orange border-orange'>
+                    {purchasesInCart?.length}
+                  </span>
+                )}
               </Link>
             </Popover>
           </div>

@@ -6,7 +6,7 @@ import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
 import InputNumber from 'src/components/InputNumber'
 import path from 'src/constants/path'
-import RateStars from 'src/pages/ProductList/AsideFilter/RatingStar'
+import RateStars from 'src/pages/ProductList/components/AsideFilter/RatingStar'
 import { QueryConfig } from 'src/pages/ProductList/ProductList'
 import { ICategory } from 'src/types/category.type'
 import { NoUndefinedField } from 'src/types/ultil.type'
@@ -87,10 +87,12 @@ const AsideFilter = ({ categories, queryConfig }: Props) => {
               <Link
                 to={{
                   pathname: path.home,
-                  search: createSearchParams({
-                    ...queryConfig,
-                    category: categoryItem._id
-                  }).toString()
+                  search: createSearchParams(
+                    omit({
+                      ...queryConfig,
+                      category: categoryItem._id
+                    })
+                  ).toString()
                 }}
                 className={classNames('relative px-2 ', {
                   'text-orange font-semibold': isActiveCategory
