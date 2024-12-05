@@ -1,12 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import ProductAPI from 'src/api/product.api'
 import PurchaseAPI from 'src/api/purchase.api'
 import QuantityController from 'src/components/QuantityController'
 import RatingStar from 'src/components/RatingStar'
+import path from 'src/constants/path'
 import { PurchaseStatus } from 'src/constants/purchase'
 import { queryClient } from 'src/main'
 import ProductItem from 'src/pages/ProductList/components/ProductItem'
@@ -18,6 +19,8 @@ const ProductDetail = () => {
   const imageRef = useRef<HTMLImageElement>(null)
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
+  const navigate = useNavigate()
+
   const { data } = useQuery({
     queryKey: ['get-product', id],
     queryFn: () => ProductAPI.getProductDetail(id as string)
@@ -99,6 +102,16 @@ const ProductDetail = () => {
         }
       }
     )
+  }
+
+  const buyNow = async () => {
+    const res = await addToCartMutation.mutateAsync({ buy_count: buyCount, product_id: product?._id as string })
+    const purchase = res.data.data
+    navigate(path.cart, {
+      state: {
+        purchaseId: purchase._id
+      }
+    })
   }
 
   if (!product) return null
@@ -231,7 +244,10 @@ const ProductDetail = () => {
                   </svg>
                   Thêm vào giỏ hàng
                 </button>
-                <button className='flex ml-4 h-12 min-w-[5rem] items-center justify-center rounded-sm bg-orange px-5 capitalize text-white shadow-sm outline-none  hover:bg-orange/90'>
+                <button
+                  onClick={buyNow}
+                  className='flex ml-4 h-12 min-w-[5rem] items-center justify-center rounded-sm bg-orange px-5 capitalize text-white shadow-sm outline-none  hover:bg-orange/90'
+                >
                   Mua ngay
                 </button>
               </div>
