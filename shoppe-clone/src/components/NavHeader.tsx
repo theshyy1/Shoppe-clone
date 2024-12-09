@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import AuthAPI from 'src/api/auth.api'
@@ -6,12 +6,12 @@ import Popover from 'src/components/Popover'
 import path from 'src/constants/path'
 import { PurchaseStatus } from 'src/constants/purchase'
 import { AppContext } from 'src/contexts/app.context'
-import { queryClient } from 'src/main'
 
 const NavHeader = () => {
+  const queryClient = useQueryClient()
   const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
   const LogoutMutation = useMutation({
-    mutationFn: () => AuthAPI.LogoutAccount(),
+    mutationFn: AuthAPI.LogoutAccount,
     onSuccess: () => {
       setIsAuthenticated(false)
       setProfile(null)
@@ -82,7 +82,10 @@ const NavHeader = () => {
         >
           <div className='flex items-center py-1 hover:text-white/70 cursor-pointer ml-4'>
             <div className='w-5 h-5 mr-2 flex-shrink-0'>
-              <img src='https://picsum.photos/24/24' alt='Avatar' className='w-full h-full object-cover rounded-full' />
+              <img
+                src={profile?.avatar || 'https://picsum.photos/24/24'}
+                className='w-full h-full object-cover rounded-full'
+              />
             </div>
             <div className=''>
               <span>{profile?.email}</span>

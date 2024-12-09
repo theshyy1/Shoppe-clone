@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -9,12 +9,12 @@ import QuantityController from 'src/components/QuantityController'
 import RatingStar from 'src/components/RatingStar'
 import path from 'src/constants/path'
 import { PurchaseStatus } from 'src/constants/purchase'
-import { queryClient } from 'src/main'
 import ProductItem from 'src/pages/ProductList/components/ProductItem'
 import { IProduct, IProductListConfig } from 'src/types/product.type'
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, percentSale } from 'src/utils/ultils'
 
 const ProductDetail = () => {
+  const queryClient = useQueryClient()
   const [buyCount, setBuyCount] = useState(1)
   const imageRef = useRef<HTMLImageElement>(null)
   const { nameId } = useParams()
@@ -26,8 +26,8 @@ const ProductDetail = () => {
     queryFn: () => ProductAPI.getProductDetail(id as string)
   })
   const product = data?.data.data
-
   const queryConfig: IProductListConfig = { page: '1', limit: '20', category: product?.category._id }
+
   const { data: ProductData } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => ProductAPI.getProducts(queryConfig),

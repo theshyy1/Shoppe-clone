@@ -1,17 +1,17 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { produce } from 'immer'
+import { keyBy } from 'lodash'
+import { useContext, useEffect, useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import PurchaseAPI from 'src/api/purchase.api'
 import Button from 'src/components/Button'
 import QuantityController from 'src/components/QuantityController'
 import path from 'src/constants/path'
 import { PurchaseStatus } from 'src/constants/purchase'
+import { AppContext } from 'src/contexts/app.context'
 import { ExtendedPurchases, Purchase } from 'src/types/purchase.type'
 import { formatCurrency, generateNameId } from 'src/utils/ultils'
-import { produce } from 'immer'
-import { keyBy } from 'lodash'
-import { toast } from 'react-toastify'
-import { AppContext } from 'src/contexts/app.context'
 
 const Cart = () => {
   const location = useLocation()
@@ -153,6 +153,7 @@ const Cart = () => {
                       onClick={handleCheckAll}
                       className='h-5 w-5 accent-orange'
                       checked={isAllChecked}
+                      onChange={() => null}
                     />
                   </div>
                   <div className='flex-grow text-black'>Sản phẩm</div>.
@@ -271,6 +272,7 @@ const Cart = () => {
                 type='checkbox'
                 className='h-5 w-5 accent-orange'
                 checked={isAllChecked}
+                onChange={() => null}
                 onClick={handleCheckAll}
               />
             </div>

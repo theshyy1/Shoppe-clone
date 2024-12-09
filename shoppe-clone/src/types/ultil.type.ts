@@ -1,5 +1,3 @@
-import { NonUndefined } from 'react-hook-form'
-
 export interface SuccessResponse<Data> {
   message: string
   data: Data

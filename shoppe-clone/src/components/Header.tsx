@@ -8,7 +8,6 @@ import path from 'src/constants/path'
 import { PurchaseStatus } from 'src/constants/purchase'
 import { AppContext } from 'src/contexts/app.context'
 import useSearchProducts from 'src/hooks/useSearchProducts'
-import { Purchase } from 'src/types/purchase.type'
 import { formatCurrency } from 'src/utils/ultils'
 
 const MAX_PRODUCTS_OUTCART = 5

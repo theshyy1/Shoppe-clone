@@ -30,14 +30,14 @@ const Register = () => {
   })
 
   const registerMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirm_password'>) => AuthAPI.registerAccount(body)
+    mutationFn: AuthAPI.registerAccount
   })
 
   const onHandleSubmit = handleSubmit((data) => {
     const body = omit(data, 'confirm_password')
     registerMutation.mutate(body, {
       onSuccess: ({ data }) => {
-        toast.success('Register Successfully', {
+        toast.success(data.message, {
           delay: 1000
         })
         setIsAuthenticated(true)

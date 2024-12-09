@@ -12,6 +12,7 @@ const RANGE = 2
 
 const Pagination = ({ queryConfig, pageSize }: Props) => {
   const page = Number(queryConfig.page)
+
   const renderPagination = () => {
     let dotsAfter = false
     let dotsBefore = false

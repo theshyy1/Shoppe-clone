@@ -53,6 +53,10 @@ class Http {
               theme: 'colored'
             })
           }
+
+          if (error.response?.status === HttpStatusCode.Unauthorized) {
+            clearAccessToken()
+          }
           return Promise.reject(error)
         }
       )

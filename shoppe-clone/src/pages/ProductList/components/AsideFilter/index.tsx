@@ -23,6 +23,7 @@ const priceSchema = formSchema.pick(['price_max', 'price_min'])
 const AsideFilter = ({ categories, queryConfig }: Props) => {
   const { category } = queryConfig
   const navigate = useNavigate()
+
   const {
     control,
     handleSubmit,

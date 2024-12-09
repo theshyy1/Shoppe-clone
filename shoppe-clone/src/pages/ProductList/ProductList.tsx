@@ -6,7 +6,6 @@ import useQueryConfig from 'src/hooks/useQueryConfig'
 import AsideFilter from 'src/pages/ProductList/components/AsideFilter'
 import ProductItem from 'src/pages/ProductList/components/ProductItem'
 import SortProductList from 'src/pages/ProductList/components/SortProductList'
-
 import { IProductListConfig } from 'src/types/product.type'
 
 export type QueryConfig = {
@@ -14,6 +13,7 @@ export type QueryConfig = {
 }
 const ProductList = () => {
   const queryConfig = useQueryConfig()
+
   const { data: ProductData } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => ProductAPI.getProducts(queryConfig as IProductListConfig),

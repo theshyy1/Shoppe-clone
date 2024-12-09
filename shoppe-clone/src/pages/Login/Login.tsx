@@ -28,7 +28,7 @@ const Login = () => {
   })
 
   const loginMutation = useMutation({
-    mutationFn: (body: FormData) => AuthAPI.LoginAccount(body)
+    mutationFn: AuthAPI.LoginAccount
   })
 
   const onHandleSubmit = handleSubmit((data) => {
