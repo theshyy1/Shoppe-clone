@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { produce } from 'immer'
-import { keyBy } from 'lodash'
+import keyBy from 'lodash/keyBy'
 import { useContext, useEffect, useMemo } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Link, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import PurchaseAPI from 'src/api/purchase.api'
@@ -141,6 +142,10 @@ const Cart = () => {
 
   return (
     <div className='bg-neutral-100 py-16'>
+      <Helmet>
+        <title> Giỏ hàng | Shoppe Clone</title>
+        <meta name='description' content='Giỏ hàng của bạn! Nơi nhưng món đồ đã được thêm' />
+      </Helmet>
       <div className='container'>
         <section className='overflow-auto'>
           <div className='min-w-[1000px]'>

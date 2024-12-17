@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
+import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { UserAPI } from 'src/api/user.api'
@@ -56,6 +57,10 @@ const ChangePassword = () => {
 
   return (
     <div className='rounded-sm bg-white px-2 md:px-7 pb-10 md:pb-20 shadow'>
+      <Helmet>
+        <title>Đổi mật khẩu</title>
+        <meta name='description' content='Nơi bạn có thể đổi lại mật khẩu tài khoản!' />
+      </Helmet>
       <div className='border-b border-b-gray-200 py-6'>
         <h1 className='text-lg font-medium capitalize text-gray-900'>Đổi mật khẩu</h1>
         <div className='mt-1 text-sm text-gray-700'>Quản lí bảo thông tin hồ sơ để bảo vệ tài khoản</div>

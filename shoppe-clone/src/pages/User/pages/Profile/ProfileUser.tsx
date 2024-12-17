@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Fragment, useContext, useEffect, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { UserAPI } from 'src/api/user.api'
@@ -167,6 +168,10 @@ const ProfileUser = () => {
         <h1 className='text-lg font-medium capitalize text-gray-900'>Hồ sơ của tôi</h1>
         <div className='mt-1 text-sm text-gray-700'>Quản lí bảo thông tin hồ sơ để bảo vệ tài khoản</div>
       </div>
+      <Helmet>
+        <title> Trang cá nhân</title>
+        <meta name='description' content='Hồ sơ cá nhân của bạn' />
+      </Helmet>
       <FormProvider {...methods}>
         <form className='mt-8 flex flex-col-reverse md:flex-row md:items-start' onSubmit={onHandleSubmit}>
           <div className='mt-6 flex-grow pr-12 md:mt-0'>

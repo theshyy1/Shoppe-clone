@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
+import { convert } from 'html-to-text'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import ProductAPI from 'src/api/product.api'
@@ -117,6 +119,15 @@ const ProductDetail = () => {
   if (!product) return null
   return (
     <div className='bg-gray-300 py-6'>
+      <Helmet>
+        <title> {product.name} | Shoppe Clone</title>
+        <meta
+          name='description'
+          content={convert(product.description, {
+            wordwrap: 120
+          })}
+        />
+      </Helmet>
       <div className='bg-white p-4'>
         <div className='container'>
           <div className='grid grid-cols-12 gap-9'>

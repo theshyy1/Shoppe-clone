@@ -7,6 +7,7 @@ import { PurchaseStatus } from 'src/constants/purchase'
 import useQueryParams from 'src/hooks/useQueryParams'
 import { PurchaseListStatus } from 'src/types/purchase.type'
 import { formatCurrency, generateNameId } from 'src/utils/ultils'
+import { Helmet } from 'react-helmet-async'
 
 const purchaseTabs = [
   { status: PurchaseStatus.all, name: 'All' },
@@ -46,6 +47,10 @@ const HistoryPurchase = () => {
   ))
   return (
     <div>
+      <Helmet>
+        <title>Đơn Hàng</title>
+        <meta name='description' content='Tất cả đơn hàng bạn đã mua ở đây!' />
+      </Helmet>
       <div className='sticky top-0 flex rounded-t-sm shadow-sm'>{PurchaseTabsLink}</div>
       <div className=''>
         {purchasesInCart?.map((purchase) => (
