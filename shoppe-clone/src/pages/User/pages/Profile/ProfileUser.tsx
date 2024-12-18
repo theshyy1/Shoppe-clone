@@ -13,7 +13,7 @@ import InputNumber from 'src/components/InputNumber'
 import { AppContext } from 'src/contexts/app.context'
 import { ErrorResponse } from 'src/types/ultil.type'
 import { saveProfileToLS } from 'src/utils/auth'
-import { isAxios422Error } from 'src/utils/ultils'
+import { getAvatarUrl, isAxios422Error } from 'src/utils/ultils'
 import { UserSchema, userSchema } from 'src/utils/validate'
 
 function Info() {
@@ -220,7 +220,7 @@ const ProfileUser = () => {
           <div className='flex justify-center md:w-72 md:border-l md:border-l-gray-200'>
             <div className='flex flex-col items-center'>
               <div className='my-5 h-24 w-24'>
-                <img src={preview || avatar} className='w-full h-full rounded-full object-cover' alt='' />
+                <img src={preview || getAvatarUrl(avatar)} className='w-full h-full rounded-full object-cover' alt='' />
               </div>
               <InputFile onChange={handleChangeFile} />
               <div className='mt-3 text-gray-400'>

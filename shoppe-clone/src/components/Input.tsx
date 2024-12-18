@@ -18,7 +18,7 @@ const Input = ({
   rules,
   classNameInput = 'p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm',
   classNameError = 'mt-1 text-red-600 min-h-[1rem] text-sm',
-  classNameEyes = 'size-5 absolute top-2 right-4 cursor-pointer',
+  classNameEyes = 'size-5 absolute top-3 right-4 cursor-pointer',
   type,
   ...rest
 }: Props) => {
@@ -36,7 +36,7 @@ const Input = ({
     return type
   }
   return (
-    <div className={className}>
+    <div className={'relative ' + className}>
       <input className={classNameInput} {...registerOption} {...rest} type={handleTypeDisplay()} />
 
       {type === 'password' && !visible && (

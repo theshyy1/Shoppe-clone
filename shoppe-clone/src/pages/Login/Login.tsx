@@ -35,6 +35,7 @@ const Login = () => {
   const onHandleSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
       onSuccess: ({ data }) => {
+        console.log('Login', data)
         toast.success(data.message)
         setIsAuthenticated(true)
         setProfile(data.data.user)

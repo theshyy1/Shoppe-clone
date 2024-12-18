@@ -6,6 +6,7 @@ import Popover from 'src/components/Popover'
 import path from 'src/constants/path'
 import { PurchaseStatus } from 'src/constants/purchase'
 import { AppContext } from 'src/contexts/app.context'
+import { getAvatarUrl } from 'src/utils/ultils'
 
 const NavHeader = () => {
   const queryClient = useQueryClient()
@@ -82,10 +83,7 @@ const NavHeader = () => {
         >
           <div className='flex items-center py-1 hover:text-white/70 cursor-pointer ml-4'>
             <div className='w-5 h-5 mr-2 flex-shrink-0'>
-              <img
-                src={profile?.avatar || 'https://picsum.photos/24/24'}
-                className='w-full h-full object-cover rounded-full'
-              />
+              <img src={getAvatarUrl(profile?.avatar)} className='w-full h-full object-cover rounded-full' />
             </div>
             <div className=''>
               <span>{profile?.email}</span>
