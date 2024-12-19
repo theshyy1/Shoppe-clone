@@ -33,6 +33,7 @@
     "react-i18next": "^15.2.0",
     "react-router-dom": "^7.0.1",
     "react-toastify": "^10.0.6",
+    "vitest": "^2.1.8",
     "yup": "^1.4.0"
   },
   "devDependencies": {
